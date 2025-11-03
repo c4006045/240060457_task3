@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Dashboard</h2>
+<p>Welcome, {{ username }}</p>
+<a href="{{ url_for('main.login') }}">Logout</a>
+
+<!-- search -->
+<form method="GET" action="{{ url_for('main.search') }}">
+    <input type="text" name="term" placeholder="Search posts..." required>
+    <button type="submit">Search</button>
+</form>
+
+{% if posts %}
+    <h3>Search Results{% if search_term %} for "{{ search_term }}"{% endif %}</h3>
+    <ul>
+        {% for p in posts %}
+            <li>
+                <strong>{{ p.title }}</strong> by {{ p.author }}<br>
+                <p>{{ p.content }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+{% if posts %}
+    <table border="1" cellpadding="5" cellspacing="0">
+        <tr>
+            {% for key in posts[0].keys() %}
+                <th>{{ key }}</th>
+            {% endfor %}
+        </tr>
+        {% for post in posts %}
+            <tr>
+                {% for value in post.values() %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No posts available.</p>
+{% endif %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li style="color: green;">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+{% endblock %}
